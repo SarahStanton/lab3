@@ -1,0 +1,14 @@
+*.pyc
+__pycache__
+myvenv
+db.sqlite3
+*/static
+.DS_Store
+*/settings.py
+~/mlab4/settings.py
+/mlab4/settings.py
+~/settings.py
+/settings.py
+*/mlab4/settings.py
+settings.py
+mlab4/settings.py

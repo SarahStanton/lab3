@@ -1,0 +1,11 @@
+{% extends 'lab1/base.html' %}
+
+{% block content %}
+    <a class="btn btn-default" href="{% url 'url_list' %}"><span class="glyphicon glyphicon-home"></span></a>
+    <div class="url">
+        <h1>{{ url.title }}</h1>
+        <p>{{ url.originalURL|linebreaksbr }}</p>
+	<p>{{ url.finalDestination|linebreaksbr }}</p>
+	<p>{{ url.statusCode|linebreaksbr }}</p>
+    </div>
+{% endblock %}
