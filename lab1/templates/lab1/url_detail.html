@@ -5,7 +5,9 @@
     <div class="url">
         <h1>{{ url.title }}</h1>
         <p>{{ url.originalURL|linebreaksbr }}</p>
-	<p>{{ url.finalDestination|linebreaksbr }}</p>
-	<p>{{ url.statusCode|linebreaksbr }}</p>
+		<p>{{ url.finalDestination|linebreaksbr }}</p>
+		<p>{{ url.statusCode|linebreaksbr }}</p>
+		<p>{{ url.datetime }}</p>
+		<p>{{ url.uri }}</p>
     </div>
 {% endblock %}
