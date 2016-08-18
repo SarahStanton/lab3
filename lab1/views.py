@@ -22,7 +22,7 @@ from rest_framework.response import Response
 from lab1.serializers import URLSerializer
 
 mc = MementoClient()
-api_key = 'ak-05raw-hnf70-remn7-pgr4d-b2ppa'
+api_key = ''
 
 @ratelimit(key="ip", rate="10/m", block=True)
 @login_required(login_url="/lab3/accounts/login/")
@@ -51,19 +51,16 @@ def url_list(request):
 					post.wayback_date = str(wayback_res.get("datetime"))
 				else:
 					post.wayback_date = str(current_date)
-				# Picture archiving
-				# Connecting to S3
 				s3connection = boto3.resource("s3")
-				# For image capture with PhahtomJS
+				# For image with PhahtomJS
 				data = json.dumps({"url":response.url, "renderType":"jpeg"}).encode("utf-8")
 				headers = {"content-type": "application/json"}
 				api_url = "http://PhantomJScloud.com/api/browser/v2/" + api_key + "/"
 				req = urllibreq.Request(url=api_url, data=data, headers=headers)
 				res = urllibreq.urlopen(req)
 				result = res.read()
-				# Puts the generated image on S3
 				s3connection.Bucket("stants5lab3").put_object(Key=str(current_date) + ".jpg", Body=result, ACL="public-read", ContentType="image/jpeg")
-				# Generates a publicly accessible link to the image
+				# publicly accessible link to the image
 				pic_url = "http://s3.amazonaws.com/stants5lab3/" + str(current_date) + ".jpg"
 				post.archive_link = pic_url
 			# Sets up error message
@@ -74,7 +71,6 @@ def url_list(request):
 				post.wayback = "Not available"
 				post.wayback_date = "Not available"
 				post.archive_link = e
-				# Redirects to details page
 			finally:
 				post.save()
 				return redirect('url_detail', pk = post.pk)
@@ -83,23 +79,20 @@ def url_list(request):
 		form = URLForm
 	return render(request, 'lab1/url_list.html', {'urls': urls, 'form': URLForm})
 
-# Sends information for the "Detail" page
+
 @ratelimit(key="ip", rate="10/m", block=True)
 @login_required(login_url="/lab3/accounts/login/")
 def url_detail(request, pk):
 	url = get_object_or_404(URL, pk = pk)
 	return render(request, 'lab1/url_detail.html', {'url': url})
 
-# Handles the deletion of a URL from the list
 @ratelimit(key="ip", rate="10/m", block=True)
 @login_required(login_url="/lab3/accounts/login/")
 def url_delete(request, pk):
 	url = get_object_or_404(URL, pk = pk)
 	url_key = url.archive_link
-	# Connection to S3 Bucket for pic storage	
-	#boto3.session.Session(aws_access_key_id=ACCESS_KEY, aws_secret_access_key=SECRET_KEY)
+
 	s3connection = boto3.client("s3")
-	# Check to see if the img exists in the bucket
 	exists = False
 	try:
 		s3connection.get_object(Bucket="stants5lab3", Key=url_key)
@@ -119,8 +112,6 @@ def url_delete(request, pk):
 def logout_view(request):
 	logout(request)
 	return redirect('login')
-
-# API Logic
 
 # GET a list of all current URLs or POST a new URL
 @ratelimit(key="ip", rate="10/m", block=True)
