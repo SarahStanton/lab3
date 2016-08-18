@@ -9,6 +9,9 @@ class URL(models.Model):
 	uri = models.URLField(max_length=300, null=True)
 	datetime = models.CharField(max_length=50, null=True)
 	
+	wayback = models.CharField(max_length=300, null=originalURL)
+	wayback_date = models.CharField(max_length=50, null=True)
+	archive_link = models.CharField(max_length=300, null=True)
+	
 	def __str__(self):
 		return self.originalURL 
-
